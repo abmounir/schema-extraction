@@ -30,7 +30,7 @@ async def login(creds: dict):
                         ).connect()
     if db_connect is not None:
         # generate jwt token
-        token=generate_jwt_token('das',data={'username':username,'db_name':dbname,'password':password})
+        token=generate_jwt_token('das',data={'username':username,'dbname':dbname,'password':password})
         return {"message": "success", "token":token}
     else:
         return {"message": "failed! wrong credentials, try again"}
