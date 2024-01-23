@@ -1,6 +1,8 @@
 Brief documentation on the endpoints of your API
 ## **API documentation**
-
+check the docs.md file
+## request flow :
+api->database server->databases->db_name->schemas->schema_name->public->tables->table_name->columns 
 
 ## **High-level answers to the following questions**:
 1- How would you implement authentication? 
@@ -18,3 +20,17 @@ c- if we are using kubernetes, we can abstract that using either istio and/or an
 3- If you had to be able to support Databases with 10,000 tables, how would your design change? What if you had to support databases with a million columns across 100,000 tables?
 > the design of such a system requires distributing the databases across multiple database servers instead of only one. This also means that we need another database (preferably a NOSQL DB like AMAZON DynamoDB) to store the data (database name, database server host).
 > Howerver, if the database needs to have a millions of columns and 100k tables, it is better to choose a columnar databases such as cassanda, HBase, clickhouse (clickhouse is a columnar sql based database).
+
+
+## How to run
+1- build the docker images:
+```
+docker-dompose build
+```
+
+2- run:
+```
+docker-dompose up
+```
+3- access the web UI of FastAPI; `<YOUR_PRIVATE_IP_ADDRESS>:8000/docs`
+

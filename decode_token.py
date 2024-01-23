@@ -32,6 +32,6 @@ def generate_jwt_token(secret_key, data, expiration_minutes=60):
 
 
 
-print(generate_jwt_token('das',data={'username':'postgres','password':'mounir','dbname':'upwork'})) 
+# print(generate_jwt_token('das',data={'username':'postgres','password':'mounir','dbname':'upwork'})) 
 
 

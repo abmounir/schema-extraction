@@ -1,11 +1,7 @@
 import psycopg2
 from psycopg2 import sql
 import os
-dbname = "upwork"
-user = "postgres"
-password = "mounir"
-host = "localhost"
-port = "5432"
+
 
 
 class Operations:
