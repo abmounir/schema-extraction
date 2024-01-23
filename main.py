@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Header
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Header, HTTPException
+from fastapi.responses import JSONResponse, HTMLResponse
 from typing import Annotated
 import datetime
 from datetime import timedelta
@@ -38,13 +38,53 @@ async def login(creds: dict):
     
 @app.get('/v1/list_tables',status_code=200)
 async def list_schema_info( token: Annotated[str | None, Header()] = None):
-    if decode_jwt_token(token=token,secret_key='das') :
-        db_connect = Operations(dbname=decode_jwt_token(token=token,secret_key='das')['dbname'],
-                                user=decode_jwt_token(token=token,secret_key='das')['username'],
-                                password=decode_jwt_token(token=token,secret_key='das')['password'],
-                                )
-        
-        with db_connect.connect() as connection:
-            data=db_connect.list_tables()
-            return {"tables":data}
-        
+    """_summary_
+    Get all info about schema
+    Args:
+        token (Annotated[str  |  None, Header, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
+    try:
+        if decode_jwt_token(token=token,secret_key='das'):
+            db_connect = Operations(dbname=decode_jwt_token(token=token,secret_key='das')['dbname'],
+                                    user=decode_jwt_token(token=token,secret_key='das')['username'],
+                                    password=decode_jwt_token(token=token,secret_key='das')['password'],
+                                    )
+            
+            with db_connect.connect() as connection:
+                data=db_connect.list_tables()
+                return {"dbname":decode_jwt_token(token=token,secret_key='das')['dbname']
+                    ,"tables":data}
+    except Exception as e:
+        raise HTTPException(status_code=403, detail="token expired")
+
+
+@app.get('/v1/search_tables', status_code=200)        
+async def search_table(table_name: str, token: Annotated[str | None, Header()] = None):
+    """search a table by its name
+
+    Args:
+        table_name (str): _description_
+        token (Annotated[str  |  None, Header, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
+    try:
+        if decode_jwt_token(token=token, secret_key='das'):
+            db_connect = Operations(dbname=decode_jwt_token(token=token, secret_key='das')['dbname'],
+                                    user=decode_jwt_token(token=token, secret_key='das')[
+                'username'],
+                password=decode_jwt_token(token=token, secret_key='das')[
+                'password'],
+            )
+
+            with db_connect.connect() as connection:
+                data = db_connect.search_table(table_name=table_name)
+                return {"dbname": decode_jwt_token(token=token, secret_key='das')['dbname'],
+                    "tables": data}
+   
+    except Exception as e:
+        raise HTTPException(status_code=403, detail="token expired")

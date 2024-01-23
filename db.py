@@ -56,10 +56,10 @@ class Operations:
 
                 # Fetch and print the results
                 results = cursor.fetchall()
-                columns=[]
+                columns={}
                 for row in results:
                     # print(f"Column Name: {row[0]}, Data Type: {row[1]}")
-                    columns.append(row)
+                    columns[row[0]] = row[1]
                 schema_data[table] = columns
 
             print(schema_data)
@@ -73,17 +73,21 @@ class Operations:
         connection = self.connection
         cursor = connection.cursor()
         query = sql.SQL(f"""
-                SELECT table_name
-                FROM information_schema.tables
-                WHERE table_schema = %s
-                AND table_name = %s;
+                 SELECT column_name, data_type
+            FROM information_schema.columns
+            WHERE table_schema = %s
+            AND table_name = %s;
             """)
         try:
             parameters = ('public',table_name)
             cursor.execute(query, parameters)
             results = cursor.fetchall()
+          
+            columns_dict={}
             for row in results:
-                print(row[0]) 
+                columns_dict[row[0]]=row[1]
+            print(columns_dict)
+            return columns_dict
         except Exception as e:
             print(f"Error: {e}")
        
@@ -92,7 +96,7 @@ class Operations:
     
     
 # if __name__ == "__main__":
-#     db_instance = Operations(dbname=dbname, user=user, password=password, host=host, port=port)
+#     db_instance = Operations(dbname=dbname, user=user, password=password)
 
 #     try:
 #         with db_instance.connect() as connection:
