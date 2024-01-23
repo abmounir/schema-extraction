@@ -34,3 +34,4 @@ docker-dompose up
 ```
 3- access the web UI of FastAPI; `<YOUR_PRIVATE_IP_ADDRESS>:8000/docs`
 
+video: https://www.loom.com/share/c86e256861c946d3a7a577cb3935cd93
